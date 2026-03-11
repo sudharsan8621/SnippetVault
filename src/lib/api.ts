@@ -1,7 +1,7 @@
-import { createClient } from '@/lib/supabase/client'
 import {
 Profile,
 Snippet,
+Tag,
 SnippetShare,
 CreateSnippetInput,
 UpdateSnippetInput,
@@ -265,6 +265,6 @@ async getAllTags() {
     .order('name')
 
   if (error) throw error
-  return data as unknown[]
+  return data as Tag[]
 },
 }

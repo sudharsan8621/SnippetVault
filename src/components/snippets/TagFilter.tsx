@@ -3,6 +3,7 @@
 import { useTags } from '@/hooks'
 import { useUIStore } from '@/stores/uiStore'
 import { Badge } from '@/components/ui/badge'
+import { Tag } from '@/types'
 
 export default function TagFilter() {
   const { data: tags } = useTags()
@@ -12,7 +13,7 @@ export default function TagFilter() {
 
   return (
     <div className="flex flex-wrap gap-2">
-      {tags.map((tag) => (
+      {(tags as Tag[]).map((tag) => (
         <Badge
           key={tag.id}
           variant={selectedTags.includes(tag.name) ? 'default' : 'outline'}
