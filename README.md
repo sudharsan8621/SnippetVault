@@ -1,36 +1,107 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# SnippetVault
 
-## Getting Started
+A public code snippet manager built for developers to save, organize, search, and share reusable code snippets.
 
-First, run the development server:
+## Live Demo
+
+🔗 [https://snippet-vault-your-url.vercel.app](https://snippet-vault-your-url.vercel.app)
+
+## Tech Stack
+
+- **Framework:** Next.js 16+ (App Router)
+- **Language:** TypeScript (Strict Mode)
+- **Styling:** TailwindCSS + shadcn/ui
+- **Database:** Supabase (PostgreSQL)
+- **Authentication:** Supabase Auth
+- **State Management:**
+  - Server State: TanStack Query v5
+  - UI State: Zustand
+- **Image Export:** html-to-image
+
+## Features
+
+- ✅ Email/Password Authentication
+- ✅ Create, Edit, Delete Snippets
+- ✅ Public/Private Snippet Toggle
+- ✅ Search Snippets (Debounced)
+- ✅ Tag Filtering
+- ✅ Share via Public URL
+- ✅ Share with Specific Users
+- ✅ Export Snippet as PNG Image
+- ✅ Copy to Clipboard
+- ✅ Public Profile Page (/u/[username])
+- ✅ Public Snippet Page (/s/[id])
+- ✅ Responsive Design (Desktop/Tablet/Mobile)
+
+## Setup Instructions
+
+### 1. Clone Repository
 
 ```bash
+git clone https://github.com/sudharsan8621/SnippetVault.git
+cd SnippetVault
+
+
+
+2. Install Dependencies
+npm install
+
+
+
+3. Environment Variables
+Create .env.local file in root directory:
+
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+
+
+4. Run Development Server
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Open http://localhost:3000
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Supabase Configuration
+Database Tables
+profiles - User profiles (extends auth.users)
+snippets - Code snippets storage
+tags - Tag labels
+snippet_tags - Junction table for snippet-tag relationship
+snippet_shares - Sharing permissions
+Row Level Security (RLS)
+All tables have RLS enabled:
 
-## Learn More
+Users can only CRUD their own snippets
+Public snippets visible to everyone
+Shared snippets visible to shared users
+Project Structure
 
-To learn more about Next.js, take a look at the following resources:
+src/
+├── app/
+│   ├── (auth)/login, signup
+│   ├── dashboard/
+│   ├── s/[id]/          # Public snippet page
+│   └── u/[username]/    # Public profile page
+├── components/
+│   ├── ui/              # shadcn components
+│   └── snippets/        # Snippet components
+├── hooks/               # TanStack Query hooks
+├── lib/
+│   ├── api.ts           # API functions
+│   └── supabase/        # Supabase clients
+├── stores/              # Zustand stores
+└── types/               # TypeScript types
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Architectural Decisions
+TanStack Query for Server State - Automatic caching, background refetching, optimistic updates
+Zustand for UI State - Lightweight, simple API for filters, modals, active states
+Supabase RLS - Database-level security instead of API middleware
+shadcn/ui - Customizable, accessible components
+Known Trade-offs
+Tags feature simplified (no tag management UI)
+Syntax highlighting uses basic styling (not full Prism/Shiki)
+Image export limited to 50 lines
+Author
+Built by [Your Name] for WeframeTech Frontend Internship Assignment.
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
