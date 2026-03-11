@@ -2,7 +2,6 @@ import { createClient } from '@/lib/supabase/client'
 import {
 Profile,
 Snippet,
-Tag,
 SnippetShare,
 CreateSnippetInput,
 UpdateSnippetInput,
@@ -27,11 +26,11 @@ async signUp({ email, password, display_name, username }: SignUpInput) {
   if (authData.user) {
     const { error: profileError } = await supabase
       .from('profiles')
-      .insert({
+      .insert([{
         id: authData.user.id,
-        username,
-        display_name,
-      })
+        username: username,
+        display_name: display_name,
+      }])
 
     if (profileError) throw profileError
   }
@@ -100,8 +99,7 @@ async getMySnippets() {
     .order('created_at', { ascending: false })
 
   if (error) throw error
-  
-  // Add empty tags array
+
   const snippets = data.map(snippet => ({
     ...snippet,
     tags: []
@@ -137,14 +135,14 @@ async createSnippet(input: CreateSnippetInput) {
 
   const { data: snippet, error: snippetError } = await supabase
     .from('snippets')
-    .insert({
+    .insert([{
       user_id: user.id,
       title: input.title,
       description: input.description,
       language: input.language,
       code: input.code,
       is_public: input.is_public,
-    })
+    }])
     .select()
     .single()
 
@@ -213,7 +211,6 @@ async getShares(snippetId: string) {
 async shareWithUser(snippetId: string, username: string) {
   const supabase = createClient()
 
-  // Find user by username
   const { data: profile, error: profileError } = await supabase
     .from('profiles')
     .select('*')
@@ -224,19 +221,17 @@ async shareWithUser(snippetId: string, username: string) {
     throw new Error('No account found with that username')
   }
 
-  // Check if sharing with self
   const { data: { user } } = await supabase.auth.getUser()
   if (user?.id === profile.id) {
     throw new Error('You cannot share a snippet with yourself')
   }
 
-  // Create share
   const { data, error } = await supabase
     .from('snippet_shares')
-    .insert({
+    .insert([{
       snippet_id: snippetId,
       shared_with: profile.id,
-    })
+    }])
     .select()
     .single()
 
@@ -270,6 +265,6 @@ async getAllTags() {
     .order('name')
 
   if (error) throw error
-  return data as Tag[]
+  return data as unknown[]
 },
 }
